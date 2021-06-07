@@ -1,0 +1,3 @@
+[submodule "UI_Template/UI_Template/ChatCrypt"]
+	path = UI_Template/UI_Template/ChatCrypt
+	url = https://github.com/anurag0608/ChatCrypt.git
