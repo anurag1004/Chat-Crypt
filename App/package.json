@@ -4,6 +4,9 @@
   "description": "autherization of users using jwt token",
   "main": "app.js",
   "scripts": {
+    "install": "npm  i --save",
+    "seed":"node seedDb.js",
+    "start": "NODE_ENV=development & node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "AxDu",

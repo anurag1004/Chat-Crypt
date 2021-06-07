@@ -11,7 +11,7 @@ config= require('./config.js'),
 authRoutes = require('./routes/authRoutes'),
 cookieParser = require('cookie-parser');
 //make a database with name credentials
-mongoose.connect('mongodb://localhost:27017/credentials',{
+mongoose.connect('mongodb://localhost:27017/ChatCrypt',{
    useNewUrlParser: true,
    useFindAndModify: false,
    useCreateIndex: true,
