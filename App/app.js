@@ -9,7 +9,7 @@ User = require('./models/user.js'),
 Bearer = require('./models/issuedToken.js'),
 config= require('./config.js'),
 authRoutes = require('./routes/authRoutes'),
-cookieParser = require('cookie-parser');
+cookieParser = require('cookie-parser')
 //make a database with name credentials
 mongoose.connect('mongodb://localhost:27017/ChatCrypt',{
    useNewUrlParser: true,
@@ -121,7 +121,7 @@ app.get('/contacts',async (req, res)=>{
         contact_names.push(user.username)
     })
     console.log(contact_names)
-    res.send(contact_names)
+    res.render("contacts.ejs",{names:contact_names})
 })
 //////////////////////////////////////////////////////////
 

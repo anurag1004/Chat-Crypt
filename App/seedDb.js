@@ -12,6 +12,15 @@ const accounts = [{
 },{
     "username":"amit",
     "password":"12345"
+},{
+    "username":"akash003",
+    "password":"12345",
+},{
+    "username":"alpha909",
+    "password":"12345",
+},{
+    "username":"bravo101",
+    "password":"12345"
 }]
 mongoose.connect('mongodb://localhost:27017/ChatCrypt',{
    useNewUrlParser: true,
