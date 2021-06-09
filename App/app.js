@@ -47,7 +47,7 @@ app.get('/',validate_token,(req, res)=>{
             console.log(err);
         }else{
             //console.log(user.username);
-            res.render("index",{user : user.username});
+            res.render("dashboard",{user : user.username});
         }
     })
   
