@@ -61,7 +61,7 @@ app.get('/my_inbox', validate_token, (req, res)=>{
             console.log(err);
             res.redirect('/')
         }
-        res.send({"my_outbox":me.inbox})
+        res.render("inbox", {"my_inbox":me.inbox,"loggedInUser":req.headers["loggedInUser"]})
     })
 })
 app.get('/my_outbox', validate_token, (req, res)=>{
@@ -71,7 +71,7 @@ app.get('/my_outbox', validate_token, (req, res)=>{
             console.log(err);
             res.redirect('/')
         }
-        res.send({"my_outbox":me.outbox})
+        res.render("outbox", {"my_outbox":me.outbox,"loggedInUser":req.headers["loggedInUser"]})
     })
 })
 app.post('/sendMessage', validate_token,async (req, res)=>{
@@ -103,9 +103,9 @@ app.post('/sendMessage', validate_token,async (req, res)=>{
     // console.log(received_msg)
 
     // update inbox of receiver
-    receiverObj.inbox.push(received_msg)
+    receiverObj.inbox.unshift(received_msg)
     // update outbox of sender
-    senderObj.outbox.push(sent_msg)
+    senderObj.outbox.unshift(sent_msg)
     
     await receiverObj.save().catch(err=>{
         console.log(err)
@@ -185,3 +185,4 @@ function validate_token(req, res, next){
         }
     });
  }
+ 
