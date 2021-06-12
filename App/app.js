@@ -2,6 +2,7 @@ const express = require('express'),
 app = express(),
 mongoose = require('mongoose'),
 bcrypt = require('bcrypt'),
+dotenv = require('dotenv'),
 bodyParser = require('body-parser'),
 jwt = require('jsonwebtoken'),
 cors = require('cors'),
@@ -36,7 +37,7 @@ app.use(require('express-session')({
     saveUninitialized:false,
   }));
 app.disable('x-powered-by');
-
+dotenv.config();
 // PROTECTED ROUTES ////////////////////////////////////
 app.get('/',validate_token,(req, res)=>{
     // console.log(req.cookies);
@@ -144,7 +145,7 @@ app.get('/logout',authRoutes)
 
 
 
-app.listen(3000,(req, res)=>{
+app.listen(process.env.PORT,(req, res)=>{
     console.log("server started at port 3000 --> http://localhost:3000");
 });
 
@@ -157,6 +158,7 @@ function validate_token(req, res, next){
             // console.log(err);
             console.log("Token Expired!!");
             res.clearCookie("jwt");
+            res.clearCookie("AES_KEY");
             res.redirect("/login");
         }else{
             // console.log(decoded);
@@ -177,6 +179,7 @@ function validate_token(req, res, next){
                             console.log("Token couldn't be found!");
 
                             res.clearCookie("jwt"); //user not found on the issued token list
+                            res.clearCookie("AES_KEY");
                             req.session.status = false;
                             res.redirect('/login');
                         }
