@@ -56,27 +56,27 @@ app.get('/',validate_token,(req, res)=>{
 });
 app.get('/my_inbox', validate_token, (req, res)=>{
     const user_id = req.headers["user_id"]
-    User.findById(user_id).select("inbox").exec((err, inbox)=>{
+    User.findById(user_id).exec((err, me)=>{
         if(err){
-            res.send(err)
+            console.log(err);
+            res.redirect('/')
         }
-        // console.log(inbox)
-        res.send(inbox)
+        res.send({"my_outbox":me.inbox})
     })
 })
 app.get('/my_outbox', validate_token, (req, res)=>{
     const user_id = req.headers["user_id"]
-    User.findById(user_id).select("outbox").exec((err, outbox)=>{
+    User.findById(user_id).exec((err, me)=>{
         if(err){
-            res.send(err)
+            console.log(err);
+            res.redirect('/')
         }
-        // console.log(inbox)
-        res.send(outbox)
+        res.send({"my_outbox":me.outbox})
     })
 })
-app.post('/sendMessage', async (req, res)=>{
-    const msg = req.body.message
-    const from = req.body.from
+app.post('/sendMessage', validate_token,async (req, res)=>{
+    const msg = req.body.msg
+    const from = req.headers["loggedInUser"]
     const to = req.body.to
     console.log("Message :" + msg);
     console.log("From :" + from);
@@ -89,11 +89,18 @@ app.post('/sendMessage', async (req, res)=>{
         console.log(err)
         res.send(err)
     })
-    console.log(receiverObj);
-    let received_msg = {"text": msg, "from":senderObj._id}
-    let sent_msg = {"text": msg, "to":receiverObj._id}
-
-    console.log(received_msg)
+    // console.log(receiverObj);
+    // console.log(senderObj);
+    let received_msg = {
+        "msg":msg,
+        "from":senderObj.username
+    }
+    let sent_msg = {
+        "msg":msg,
+        "to":receiverObj.username
+    }
+    // console.log(sent_msg)
+    // console.log(received_msg)
 
     // update inbox of receiver
     receiverObj.inbox.push(received_msg)
@@ -108,15 +115,14 @@ app.post('/sendMessage', async (req, res)=>{
         console.log(err)
         res.send(err)
     })
-    res.send({"msg":req.body.message, "from": req.body.from, "to": req.body.to});
-    
+    res.send("OK");
 })
 app.get('/contacts', validate_token, async (req, res)=>{
     const users = await User.find({}).catch(err=>{
         console.log(err)
         res.send(err)
     })
-    console.log(users)
+    // console.log(users)
     const contacts = []
     users.forEach(user=>{
         if(user.username!=req.headers["loggedInUser"])

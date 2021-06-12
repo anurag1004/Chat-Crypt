@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const {InboxMessageSchema,  OutboxMessageSchema} = require('./message')
+// const {InboxMessageSchema,  OutboxMessageSchema} = require('./message')
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -25,7 +25,25 @@ const userSchema = new mongoose.Schema({
         trim: true
     },
     // will contain all received messages
-    inbox : [InboxMessageSchema],
-    outbox :[OutboxMessageSchema]
+    inbox : [{ msg:{
+                type: String,
+                trim: true
+             },
+               from: {
+                   type: String,
+                   trim: true
+               },
+               time : { type : Date, default: Date.now }
+            }],
+    outbox :[{ msg:{
+                type: String,
+                trim: true
+               },
+               to: {
+                    type: String,
+                    trim: true
+                },
+                time : { type : Date, default: Date.now }
+            }]
 });
 module.exports = mongoose.model("User",userSchema);
