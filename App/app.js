@@ -132,6 +132,9 @@ app.get('/contacts', validate_token, async (req, res)=>{
     // console.log(contact_names)
     res.render("contacts",{users:contacts, loggedInUser:req.headers["loggedInUser"]})
 })
+app.get("/__get__AES__KEY__", validate_token, (req, res)=>{
+    res.send({"key":process.env.AES_KEY});
+})
 //////////////////////////////////////////////////////////
 
 // REST API for authentication //
@@ -158,7 +161,6 @@ function validate_token(req, res, next){
             // console.log(err);
             console.log("Token Expired!!");
             res.clearCookie("jwt");
-            res.clearCookie("AES_KEY");
             res.redirect("/login");
         }else{
             // console.log(decoded);
@@ -179,7 +181,6 @@ function validate_token(req, res, next){
                             console.log("Token couldn't be found!");
 
                             res.clearCookie("jwt"); //user not found on the issued token list
-                            res.clearCookie("AES_KEY");
                             req.session.status = false;
                             res.redirect('/login');
                         }

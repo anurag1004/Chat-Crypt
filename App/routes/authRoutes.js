@@ -51,7 +51,6 @@ router.post('/login',(req, res)=>{
                                 const JWT = create_token(username,"600000", issued._id); //1min = 60000ms
                                 //cookie will be deleted after 10min
                                 res.cookie("jwt", JWT, {expire: 600000 + Date.now(),httpOnly: true,sameSite:true});
-                                res.cookie("AES_KEY",process.env.AES_KEY,{expire: 600000 + Date.now(),httpOnly: true,sameSite:true})
                                 //managing session using express session, just using to check login status
                                 req.session.user_id = user._id;
                                 req.session.status = true;
@@ -80,7 +79,6 @@ router.post('/login',(req, res)=>{
 router.get('/logout',validate_token,(req, res)=>{
     //clear all cookies
     res.clearCookie("jwt");
-    res.clearCookie("AES_KEY")
     //delete all active tokens from the database
     Bearer.deleteMany({user_id: req.user_id},(err)=> console.log(err));
 
@@ -158,7 +156,6 @@ function validate_token(req, res, next){
             // console.log(err);
             console.log("Token Expired!!");
             res.clearCookie("jwt");
-            res.clearCookie("AES_KEY");
             res.redirect("/login");
         }else{
             // console.log(decoded);
@@ -182,7 +179,6 @@ function validate_token(req, res, next){
                             console.log("Token couldn't be found!");
 
                             res.clearCookie("jwt"); //user not found on the issued token list
-                            res.clearCookie("AES_KEY");
                             req.session.status = false;
                             res.redirect('/login');
                         }
