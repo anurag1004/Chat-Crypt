@@ -4,21 +4,33 @@ bcrypt = require('bcrypt'),
 config= require('./config'),
 mongoose = require('mongoose');
 const accounts = [{
+    "firstName":"Anurag",
+    "lastName":"Verma",
     "username":"anurag",
     "password":"12345"
 },{
+    "firstName":"Sayantan",
+    "lastName":"Ghosh",
     "username":"sayantan",
     "password":"12345"
 },{
+    "firstName":"Amit",
+    "lastName":"Singh",
     "username":"amit",
     "password":"12345"
 },{
+    "firstName":"Akash",
+    "lastName":"Ranjan",
     "username":"akash003",
     "password":"12345",
 },{
+    "firstName":"K",
+    "lastName":"Rohit",
     "username":"alpha909",
     "password":"12345",
 },{
+    "firstName":"Tony",
+    "lastName":"Stark",
     "username":"bravo101",
     "password":"12345"
 }]
@@ -45,6 +57,8 @@ User.deleteMany({},(async (err, obj)=>{
         const  hashed = await bcrypt.hash(raw_password,config.saltingRounds).catch((err)=>{throw new Error(err)})
         const user = new User();
         user.username = account.username;
+        user.firstName = account.firstName;
+        user.lastName = account.lastName;
         user.password = hashed;
         await User.create(user).catch(err=>{throw new Error(err)});
     })

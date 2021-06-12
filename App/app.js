@@ -42,12 +42,13 @@ app.get('/',validate_token,(req, res)=>{
     // console.log(req.cookies);
     // console.log("Session "+ req.session);
     console.log(req.user_id);
+    // console.log(req.headers)
     User.findById(req.user_id,(err, user)=>{
         if(err){
             console.log(err);
         }else{
-            //console.log(user.username);
-            res.render("dashboard",{user : user.username});
+            // console.log(user.username);
+            res.render("dashboard",{loggedInUser:req.headers["loggedInUser"]});
         }
     })
   
@@ -110,18 +111,19 @@ app.post('/sendMessage', async (req, res)=>{
     res.send({"msg":req.body.message, "from": req.body.from, "to": req.body.to});
     
 })
-app.get('/contacts',async (req, res)=>{
+app.get('/contacts', validate_token, async (req, res)=>{
     const users = await User.find({}).catch(err=>{
         console.log(err)
         res.send(err)
     })
     console.log(users)
-    const contact_names = []
+    const contacts = []
     users.forEach(user=>{
-        contact_names.push(user.username)
+        if(user.username!=req.headers["loggedInUser"])
+            contacts.push({"fullName":user.firstName+" "+user.lastName, "username":user.username})
     })
-    console.log(contact_names)
-    res.render("contacts.ejs",{names:contact_names})
+    // console.log(contact_names)
+    res.render("contacts",{users:contacts, loggedInUser:req.headers["loggedInUser"]})
 })
 //////////////////////////////////////////////////////////
 
@@ -161,6 +163,7 @@ function validate_token(req, res, next){
                         if(foundToken.length == 1){
                                 req.user_id = foundToken[0].user_id;
                                 req.headers["user_id"] = foundToken[0].user_id
+                                req.headers["loggedInUser"] = foundToken[0].bearer
                                 //append a user object to request header//
                                 next();
 

@@ -101,8 +101,10 @@ router.get('/register',(req, res)=>{
 });
 router.post('/register',(req, res)=>{
     console.log("post register route");
-    const username = req.body.username;
-    const password = req.body.password;
+    const username = req.body.username
+    const password = req.body.password
+    const fname = req.body.inputfname
+    const lname = req.body.inputlname
     User.find({username: username},(err,foundUser)=>{
         if(err){
             console.log(err);
@@ -116,6 +118,8 @@ router.post('/register',(req, res)=>{
                         const user = new User();
                         user.username = username;
                         user.password = hashed;
+                        user.firstName = fname;
+                        user.lastName = lname;
                         User.create(user,(err, newUser)=>{
                             if(err){
                                 console.log(err);
@@ -165,6 +169,9 @@ function validate_token(req, res, next){
                         if(foundToken.length == 1){
                                 req.user_id = foundToken[0].user_id
                                 req.headers["user_id"] = foundToken[0].user_id
+                                req.headers["loggedInUser"] = foundToken[0].bearer
+	                            res.locals.loggedInUser = req.headers["loggedInUser"]
+
                                 //routerend a user object to request header//
                                 //console.log(req.user_id);
                                 next();
