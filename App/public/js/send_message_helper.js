@@ -11,7 +11,6 @@ function getCookie(name) {
 
 $(document).ready(()=>{
     const $ = jQuery.noConflict();
-    console.log(document.cookie)
     $("span.sendMessage").on("click",(e)=>{
         
         const recipient_name = $(e.currentTarget).attr("data")

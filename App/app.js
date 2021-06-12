@@ -38,11 +38,11 @@ app.use(require('express-session')({
   }));
 app.disable('x-powered-by');
 dotenv.config();
+
 // PROTECTED ROUTES ////////////////////////////////////
 app.get('/',validate_token,(req, res)=>{
     // console.log(req.cookies);
     // console.log("Session "+ req.session);
-    console.log(req.user_id);
     // console.log(req.headers)
     User.findById(req.user_id,(err, user)=>{
         if(err){
@@ -62,7 +62,8 @@ app.get('/my_inbox', validate_token, (req, res)=>{
             console.log(err);
             res.redirect('/')
         }
-        res.render("inbox", {"my_inbox":me.inbox,"loggedInUser":req.headers["loggedInUser"]})
+        const inbox = me.inbox==null?[]:me.inbox
+        res.render("inbox", {"my_inbox":inbox,"loggedInUser":req.headers["loggedInUser"]})
     })
 })
 app.get('/my_outbox', validate_token, (req, res)=>{
@@ -72,7 +73,8 @@ app.get('/my_outbox', validate_token, (req, res)=>{
             console.log(err);
             res.redirect('/')
         }
-        res.render("outbox", {"my_outbox":me.outbox,"loggedInUser":req.headers["loggedInUser"]})
+        const outbox = me.outbox==null?[]:me.outbox
+        res.render("outbox", {"my_outbox":outbox,"loggedInUser":req.headers["loggedInUser"]})
     })
 })
 app.post('/sendMessage', validate_token,async (req, res)=>{
